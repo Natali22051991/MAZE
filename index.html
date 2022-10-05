@@ -135,13 +135,24 @@
         </table>
         <span>Схема управления героем</span>
         <div class="scheme">
-            <button class="up">↑</button>
-            <button class="down">↓</button>
-            <button class="left">←</button>
-            <button class="right">→</button>
+            <button id="ArrowUp" class="up">↑</button>
+            <div class="bottom-btn">
+                <button id="ArrowLeft" class="left">←</button>
+                <button id="ArrowDown" class="down">↓</button>
+                <button id="ArrowRight" class="right">→</button>
+            </div>
         </div>
         <div class="information-board">
-            <span>шагов = 0</span>
+            <p class="counterStep">Сделано шагов: 0</p>
+            <p class="counterWrong">Сделано ударов: 0</p>
+            <p class="counterTime">Время выполнения: 00:00:00</p>
+        </div>
+    </div>
+    <div class="backdrop hidden">
+        <div class="modal">
+            <h2>Вы добрались до финиша!</h2>
+            <p>Ваш результат:</p>
+            <p id="text"></p>
         </div>
     </div>
     <script src="script.js"></script>

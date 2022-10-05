@@ -5,15 +5,21 @@
 }
 
 .container {
-    display: flex;
+    display: block;
     flex-direction: column;
+    padding: 15px;
+    max-width: 450px;
+    width: 100%;
+    margin: 0 auto;
+
 
 }
 
 .table {
     border-collapse: collapse;
     border: 0.5px solid black;
-    margin: 5px;
+    margin: 0 auto;
+
 }
 
 tr {
@@ -21,8 +27,8 @@ tr {
 }
 
 td {
-    width: 10px;
-    height: 10px;
+    width: 30px;
+    height: 30px;
 
 }
 
@@ -38,80 +44,140 @@ td {
     background-color: greenyellow;
 }
 
+
 span {
-    display: flex;
-    margin: 0px auto;
-    font-size: 5px;
+    display: block;
+    margin: 10px auto;
+    font-size: 20px;
     white-space: nowrap;
+    text-align: center;
+
 }
 
 .scheme {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 50px;
     margin: 0 auto;
-    position: absolute;
-    padding: 5px;
-    top: 140px;
-}
-
-.up {
-    position: relative;
-    margin: 5px;
-    width: 10px;
-    height: 10px;
-    font-size: 5px;
+    flex-direction: column;
     align-items: center;
-    left: 32px;
-    top: -36px;
 }
 
-.down {
-
-    position: relative;
-    margin: 5px;
-    width: 10px;
-    height: 10px;
-    font-size: 5px;
-    left: 12px;
-    top: -25px;
+.scheme button {
+    height: 30px;
+    width: 30px;
 }
 
-.left {
-
-    position: relative;
-    margin: 5px;
-    width: 10px;
-    height: 10px;
-    font-size: 5px;
-    left: -19px;
-    top: -25px;
+.bottom-btn {
+    margin-top: 4px;
 }
 
-.right {
+.up {}
 
-    position: relative;
-    margin: 5px;
-    width: 10px;
-    height: 10px;
-    font-size: 5px;
-    left: -17px;
-    top: -25px;
-}
+.down {}
+
+.left {}
+
+.right {}
 
 .information-board {
-    height: 25px;
-    position: relative;
-    padding: 8px;
-    margin: 5px;
-    top: 40px;
+    padding: 3px;
+    margin-top: 10px;
     border: 1px solid rgb(133, 133, 160);
-    color: rgb(214, 210, 205);
+    color: rgb(63, 54, 43);
     border-radius: 6px;
 }
 
 .error {
     background-color: red;
+}
+
+
+.up:hover {
+    background-color: aquamarine;
+}
+
+.down:hover {
+
+    background-color: aquamarine;
+}
+
+.left:hover {
+
+    background-color: aquamarine;
+}
+
+.right:hover {
+
+    background-color: aquamarine;
+}
+
+.backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(117, 117, 117, 0.514);
+    backdrop-filter: blur(5px);
+}
+
+.modal {
+    width: 100%;
+    max-width: 500px;
+    background-color: #fff;
+    border-radius: 8px;
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+    min-height: 70px;
+    margin: 0 10px;
+
+    animation-name: modal-animation;
+    animation-duration: 2s;
+}
+
+.hidden {
+    animation: modal-close 2s;
+    display: none;
+}
+
+.active {
+    border-color: #0200ff;
+}
+
+@keyframes modal-animation {
+    0% {
+        width: 100px;
+        min-height: 0;
+    }
+
+    50% {
+        width: 100%;
+    }
+
+    100% {}
+}
+
+#text {
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+@media (max-width: 320px) {
+
+
+    .modal {
+        font-size: 6px;
+        padding: 15px;
+    }
+
+
+
 }

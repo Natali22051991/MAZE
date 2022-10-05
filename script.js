@@ -1,12 +1,17 @@
+const backdrop = document.querySelector('.backdrop');
+const text = document.querySelector('#text');
 const table = document.querySelector('.table');
+const counterStep = document.querySelector('.counterStep');
+const counterWrong = document.querySelector('.counterWrong');
+const counterTime = document.querySelector('.counterTime');
 const trs = table.querySelectorAll('tr');
-const row = document.querySelector('.row');
-const column = document.querySelector('.column');
-const informationBoard = document.querySelector('.information-board');
 const btnUp = document.querySelector('.up');
 const btnDown = document.querySelector('.down');
 const btnLeft = document.querySelector('.left');
 const btnRight = document.querySelector('.right');
+const informationBoard = document.querySelector('.information-board');
+
+let timerID;
 const MAZE = [
     [{ type: "wall", player: false, finish: false }, { type: "wall", player: false, finish: false }, { type: "wall", player: false, finish: false }, { type: "empty", player: false, finish: false }, { type: "empty", player: false, finish: false }, { type: "empty", player: false, finish: false }, { type: "wall", player: false, finish: false }, { type: "empty", player: false, finish: false }, { type: "empty", player: false, finish: false }, { type: "empty", player: false, finish: false }],
     [{ type: "player", player: true, finish: false }, { type: "empty", player: false, finish: false }, { type: "wall", player: false, finish: false }, { type: "empty", player: false, finish: false }, { type: "wall", player: false, finish: false }, { type: "empty", player: false, finish: false }, { type: "wall", player: false, finish: false }, { type: "wall", player: false, finish: false }, { type: "wall", player: false, finish: false }, { type: "empty", player: false, finish: false }],
@@ -21,6 +26,7 @@ const MAZE = [
 ]
 draw();
 
+
 function draw() {
     trs.forEach((tr, y) => {
         const tds = tr.querySelectorAll('td');
@@ -31,10 +37,13 @@ function draw() {
             td.classList.add(MAZE[y][x].type);
         })
     })
-    console.log(MAZE)
+    //console.log(MAZE)
 }
 
-let countClick = 0;
+let state = false;
+let i = 0;
+let j = 0;
+
 const x = 'data-coordinate-x';
 const y = 'data-coordinate-y';
 
@@ -45,13 +54,71 @@ const direct = {
     right: "ArrowRight"
 }
 
-table.addEventListener('click', (event));
+document.addEventListener('keydown', event => {
+    console.log(event);
+    if (!event.code.includes("Arrow")) {
+        return;
+    }
+    document.querySelector(`#${event.code}`).classList.add('active');
+    console.log(event.code);
+    getValueAdjacentСell(event.code);
+    countClicks();
+
+})
+
+document.addEventListener('keyup', event => {
+    document.querySelector(`#${event.code}`).classList.remove('active');
+})
+
+backdrop.addEventListener('click', modal);
+
 btnUp.addEventListener('click', (upwardMovement));
 btnDown.addEventListener('click', (downwardMovement));
 btnLeft.addEventListener('click', (leftMovement));
 btnRight.addEventListener('click', (rightMovement));
 
+function countClicks() {
+    i++;
+    counterStep.textContent = 'Cделано шагов: ' + i;
+}
+/**
+ * функция добавляющая 0, если число меньше 10
+ * @param {number} number 
+ * @returns {string}
+ */
+function addZero(number) {
+    return number < 10 ? '0' + number : number.toString();
+}
+
+function startTimer() {
+    let sec = 0;
+    let min = 0;
+    let hours = 0;
+    timerID = setInterval(() => {
+        sec = +sec + 1;
+        if (sec === 60) {
+            sec = 0;
+            min = +min + 1;
+        }
+        if (min === 60) {
+            sec = 0;
+            min = 0;
+            hours = +hours + 1
+        }
+        counterTime.innerHTML = '';
+        counterTime.textContent = `Время выполнения: ${addZero(hours)}:${addZero(min)}:${addZero(sec)}`;
+    }, 1000)
+}
+
+function stopTimer() {
+    clearInterval(timerID);
+}
+
 function getValueAdjacentСell(key) {
+    if (!state) {
+        startTimer();
+        state = true;
+    }
     let isBreak = false;
     for (let y = 0; y < MAZE.length; y++) {
         if (isBreak) {
@@ -76,6 +143,19 @@ function handlerError(td) {
         draw();
     }, 500)
 }
+
+function end() {
+    let audio = new Audio();
+    audio.src = 'torjestvennyiy-zvuk-fanfar.mp3';
+    audio.autoplay = true;
+}
+
+function mistake() {
+    let audio = new Audio();
+    audio.src = 'mistake-zvuk.mp3';
+    audio.autoplay = true;
+}
+
 function handlerKey(y, x, direction) {
     const current = MAZE[y][x];
     let next;
@@ -90,21 +170,40 @@ function handlerKey(y, x, direction) {
     }
     if (!next || next.type === 'wall') {
         handlerError(MAZE[y][x]);
+        mistake();
+        j++;
+        counterWrong.textContent = 'Сделано ударов: ' + j;
         return;
     }
     current.type = "empty";
+    draw();
+    console.log(next.type)
+    if (next.type === "finish") {
+        end();
+        stopTimer();
+        modal();
+        text.innerHTML = document.querySelector('.information-board').innerHTML
+    }
     next.type = "player";
     draw();
 }
 function upwardMovement() {
-    console.log('+x, +y + 1 => ', getValueAdjacentСell(direct.up));
+    getValueAdjacentСell(direct.up);
+    countClicks();
+
 }
 function downwardMovement() {
-    console.log('+x, +y - 1 => ', getValueAdjacentСell(direct.down));
+    getValueAdjacentСell(direct.down);
+    countClicks();
 }
 function leftMovement() {
-    console.log('+x - 1, +y => ', getValueAdjacentСell(direct.left));
+    getValueAdjacentСell(direct.left);
+    countClicks();
 }
 function rightMovement() {
-    console.log('+x + 1, +y => ', getValueAdjacentСell(direct.right));
+    getValueAdjacentСell(direct.right);
+    countClicks();
+}
+function modal() {
+    backdrop.classList.toggle('hidden');
 }
